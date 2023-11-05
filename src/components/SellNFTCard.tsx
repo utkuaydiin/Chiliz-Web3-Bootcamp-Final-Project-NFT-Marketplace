@@ -17,14 +17,35 @@ interface SellNFTCardProps {
 
 const SellNFTCard: FC<SellNFTCardProps> = ({ price, onUpdatePrice, id }) => {
 
+    const {marketplace} = getMarketplaceContract();
+    const {nft_contract} = getNFTContract();
+
+    const {mutate: grantRole, error: roleError} = useGrantRole(nft_contract);
+    const{mutate: createDirectListing,isLoading: listingLoading, error: listingError} = useCreateDirectListing(marketplace as RequiredParam <Marketplace>);
+
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onUpdatePrice(Number(event.target.value));
     };
 
     const handleListing = () => {
-       
+       try{
+        grantRole({
+            role: "admin",
+            address: getMarketplaceAddress()
+        })
+
+
+        const listing = createListingFromPriceID(price, id);
+
+        createDirectListing(listing);
+
+       }catch(e){
+              console.log("Error Listing",e)
+       }
     };
+
+
 
     return (
         <div className="relative bg-gray-800 text-white p-6 rounded-lg w-6/12 shadow-md mt-4">
@@ -47,6 +68,14 @@ const SellNFTCard: FC<SellNFTCardProps> = ({ price, onUpdatePrice, id }) => {
             >
                 List
             </button>
+            {(roleError as unknown as boolean) || (listingError as unknown as boolean) ? (
+                <div className="test-center mt-4"> Error Listing !</div>
+            ) : null }
+
+            {listingLoading && (
+            <div className="text-center mt-4">Listing in progress...</div>
+            )} 
+                
 
         </div>
     );

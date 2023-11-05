@@ -1,10 +1,40 @@
 import React, { FC, useState } from "react";
 import { DirectListingV3 } from "@thirdweb-dev/sdk";
+import { getMarketplaceContract } from "@/util/getContracts";
+import { getNFTAddress } from "@/util/getContractAddress";
+import { useAddress, useValidDirectListings } from "@thirdweb-dev/react";
 
 const ListingCard: FC<DirectListingV3> = (nft) => {
     const [message, setMessage] = useState("");
+    const nft_address = getNFTAddress();
+    const {marketplace} = getMarketplaceContract();
+
+    const address = useAddress()
+
+
+    const {data: directListing} = useValidDirectListings(marketplace, {
+        tokenContract: nft_address,
+        tokenId: nft.asset.id,
+    }); 
     
     const handleListing = async () => {
+        try {
+
+            if(directListing && directListing[0].creatorAddress !== address){
+            setMessage("Buying...")
+            let res = await marketplace?.directListings.buyFromListing(directListing[0].id,1)
+
+            if(res && res.receipt){
+                setMessage("Bought");
+            }
+        }else{
+            setMessage("Already yours")
+        }
+
+        } catch(e) {
+            setMessage("Error Buying!");
+            console.log("Error buying",e);
+        }
        
     };
 
