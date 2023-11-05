@@ -1,7 +1,7 @@
 import Layout from "@/layout/Layout";
-import {getMarketplaceContract} from "@/util/getContracts";
 import {getMarketplaceAddress} from "@/util/getContractAddress";
 import {useContract, useValidDirectListings} from "@thirdweb-dev/react";
+import ListingCard from "@/components/ListingCard";
 
 
 function Home() {

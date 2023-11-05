@@ -41,7 +41,7 @@ function NFTDetailsPage() {
             setSymbol(listedNFT.currencyValuePerToken.symbol);
 
         }
-    }, [router.query]);
+    }, [directListings, price, listingID, router.query]);
 
     return (
         <Layout>
@@ -58,8 +58,21 @@ function NFTDetailsPage() {
                    <>
                    
                    <NFTDetails {...nft} />
-                   {listingID ? (<CancelSellingCard price={price} symbol={symbol} listingID={listingID}/>) : (<SellNFTCard price={0} onUpdatePrice={setPrice} id={nftID}/>)}
-                   </>
+
+                   {listingID ? (
+                   <CancelSellingCard 
+                   price={price} 
+                   symbol={symbol} 
+                   listingID={listingID}
+                   />
+                   ) : (
+                   <SellNFTCard 
+                   price={0} 
+                   onUpdatePrice={setPrice} 
+                   id={nftID}
+                   />
+                )}
+                </>
                 )}
             </div>
         </Layout>

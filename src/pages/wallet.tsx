@@ -7,7 +7,7 @@ export default function Wallet() {
 
     const { nft_contract } = getNFTContract()
     const address = useAddress()
-    const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(nft_contract, address);
+    const { data: ownedNFTs, isLoading} = useOwnedNFTs(nft_contract, address);
 
 
     return (
