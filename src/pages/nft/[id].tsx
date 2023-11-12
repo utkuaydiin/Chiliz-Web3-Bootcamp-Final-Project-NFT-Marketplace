@@ -6,15 +6,14 @@ import NFTDetails from "@/components/NFTDetails";
 import {useNFT, useValidDirectListings} from "@thirdweb-dev/react";
 import CancelSellingCard from "@/components/CancelSelling";
 import SellNFTCard from "@/components/SellNFTCard";
-
+export default NFTDetailsPage;
 function NFTDetailsPage() {
     const router = useRouter();
     const [price, setPrice] = useState(0.01);
     const [symbol, setSymbol] = useState("");
     const [listingID, setListingID] = useState("listing");
     const [nftID, setNftID] = useState("NFTDetails");
-    
-
+    const [address, setAddress] = useState("");
 
     const {nft_contract} = getNFTContract();
     const {marketplace} = getMarketplaceContract();
@@ -26,6 +25,9 @@ function NFTDetailsPage() {
         count: 100,
     });
 
+    const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAddress(event.target.value);
+    }
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -43,6 +45,14 @@ function NFTDetailsPage() {
         }
     }, [directListings, price, listingID, router.query]);
 
+    /*const handleTransfer = async () => {
+        try{
+            alert('Transfering to address : ${contractId}.');
+        }
+    catch (error) {
+        alert("Transfer is failed ");
+    }
+};*/
     return (
         <Layout>
             <div>
@@ -66,11 +76,24 @@ function NFTDetailsPage() {
                    listingID={listingID}
                    />
                    ) : (
+                   <>
                    <SellNFTCard 
                    price={0} 
                    onUpdatePrice={setPrice} 
                    id={nftID}
                    />
+                   <div className="my-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                            Recipient Address
+                        </label>
+                        <input 
+                            type="text" 
+                            placeholder="Enter recipient address" 
+                            className="text-center"
+                            onChange={handleAddressChange}
+                        />
+                    </div>
+                </>
                 )}
                 </>
                 )}
@@ -78,4 +101,4 @@ function NFTDetailsPage() {
         </Layout>
     );
 }
-export default NFTDetailsPage;
+
